@@ -48,12 +48,11 @@ The mouse can also be used to switch focus between windows by simply hovering ov
 - `[mod]` `Z` opens copied PDF URL in Zathura
 - `[mod]` `Y` opens copied YouTube URL in MPV (using yt-dlp)
 - `[mod]` `F` opens the Flameshot GUI
+- `[mod]` `S` takes a full screenshot using Scrot
 - `[mod]` `T` spawns a command using a prompt
 - `[mod]` `V` shows the active windows through Rofi
 - `[mod]` `D` sends a notification including the current date and time
 - `[mod]` `Q` kills focused window
-- `[mod]` `CTRL` `S` takes a full screenshot using Scrot to clipboard
-- `[mod]` `CTRL` `F` takes a screenshot of the focused window using Scrot to clipboard
 - `[mod]` `CTRL` `R` restarts Qtile
 - `[mod]` `CTRL` `Q` shuts down Qtile
 

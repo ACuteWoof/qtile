@@ -1,4 +1,5 @@
 #!/bin/sh
+
 notify-send "Loading zathura..."
 URL=$(echo $(xclip -o))
 FILE=${URL##*/}

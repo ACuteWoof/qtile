@@ -20,11 +20,11 @@ with open("{}/.config/qtile/config/colors.json".format(os.getenv("HOME"))) as fi
 colors = colors_json
 wallpaper = looks["wallpaper"]
 
+home = os.path.expanduser("~")
 mod = "mod4"
 terminal = "alacritty"
-browser = "brave"
 file_manager = "alacritty -e lf"
-home = os.path.expanduser("~")
+browser = f"{home}/.config/qtile/browse.sh"
 
 keys = [
     # Switch between windows
@@ -82,21 +82,24 @@ keys = [
         desc="Spawn a command using rofi",
     ),
     Key([mod], "t", lazy.spawncmd(), desc="Spawn a command using a prompt"),
-    Key([mod], "b", lazy.spawn(browser), desc="Launch web browser"),
+    Key([mod], "b", lazy.spawn(browser), desc="Launch in browser"),
     Key([mod], "c", lazy.spawn(file_manager), desc="Launch File Manager"),
     Key(
         [mod], "v", lazy.spawn("rofi -show window"), desc="Show active windows in rofi"
     ),
     Key([mod], "f", lazy.spawn("flameshot gui"), desc="Open flameshot gui"),
-    Key([mod, "control"], "s", lazy.spawn("scrot - | xclip -selection clipboard -target image/png"), desc="Take full screenshot to clipboard"),
+    Key([mod], "s", lazy.spawn("scrot - | xclip -selection clipboard -target image/png"), desc="Take full screenshot to clipboard"),
     Key([mod, "control"], "f", lazy.spawn("scrot -w $(xdo id -p PID) - | xclip -selection clipboard -target image/png"), desc="Take current window as screenshot to clipboard"),
     Key([mod], "e", lazy.spawn("tauon"), desc="Open tauon music box"),
     Key([mod], "z", lazy.spawn(f"{home}/.config/qtile/view.sh"), desc="View in Zathura"),
     Key([mod], "y", lazy.spawn(f"{home}/.config/qtile/yt.sh"), desc="Open YouTube video in MPV"),
-    Key([mod], "g", lazy.spawn("rofi -show filebrowser"), desc="Rofi File Browser"),
+    Key([mod], "p", lazy.spawn("rofi -show latin -modi latin:~/.config/qtile/latin.sh"), desc="Search the Latin dictionary"),
+    Key([mod], "g", lazy.spawn("rofi -show bookmarks -modi bookmarks:~/.config/qtile/bookmark.sh"), desc="Bookmarks"),
+    Key([mod], "w", lazy.spawn(f"{home}/.config/qtile/addbookmark.sh"), desc="Add bookmark"),
     Key([mod, "control"], "p", lazy.spawn("rofi -show power-menu -modi power-menu:rofi-power-menu"), desc="Power Menu"),
     # Toggle between screens
     Key([mod], 'period', lazy.next_screen(), desc='Next display'),
+    Key([mod, "control"], 'b', lazy.hide_show_bar(), desc='Toggle Qtile Bar'),
 ]
 
 groups = [Group(i) for i in "1234567890"]
@@ -144,8 +147,8 @@ for i, (name, kwargs) in enumerate(group_names, 1):
     keys.append(Key([mod, "shift"], str(i), lazy.window.togroup(name)))
 
 layout_theme = {
-    "border_width": 1,
-    "margin": 1,
+    "border_width": 2,
+    "margin": 4,
     #     "border_focus": colors["color1"],
     #     "border_normal": colors["color2"],
     "border_focus": colors["border_focus"],
@@ -162,8 +165,8 @@ layouts = [
 
 widget_defaults = dict(
     font="Fira Sans Medium",
-    fontsize=10,
-    padding=3,
+    fontsize=20,
+    padding=6,
 )
 extension_defaults = widget_defaults.copy()
 
@@ -191,102 +194,121 @@ power_widgets: list = [
     ),
 ]
 
-widgets_list = lambda: [
-#     ### Run ###
-#     widget.Sep(linewidth=0, padding=6, background=colors["start"]),
-#     widget.Image(
-#         filename="~/.config/qtile/config/manjaro.png",
-#         margin=5,
-#         background=colors["start"],
-#         mouse_callbacks={"Button1": lambda: os.system("rofi -show drun")},
-#     ),
-#     widget.Sep(linewidth=0, padding=6, background=colors["start"]),
-    ### Groups ###
-    widget.Sep(linewidth=0, padding=6, background=colors["groups_bg"]),
-    widget.GroupBox(
-        font=looks["caret_font"],
-        borderwidth=3,
-        active=colors["active"],
-        inactive=colors["inactive"],
-        rounded=False,
-        highlight_method="line",
-        highlight_color=colors["groups_bg"],
-        this_current_screen_border=colors["current_screen_tab"],
-        this_screen_border=colors["color1"],
-        other_screen_border=colors["bg"],
-        foreground=colors["fg"],
-        background=colors["groups_bg"],
-    ),
-    widget.Sep(padding=6, linewidth=0, background=colors["seperator"]),
-    widget.Prompt(
-        foreground=colors["active"],
-        background=colors["groups_bg"],
-        font="JetBrains Mono Nerd Font",
-        prompt="Woof: "
-    ),
-    widget.Sep(padding=6, linewidth=0, background=colors["seperator"]),
-    widget.Spacer(),
-    ### Systray ###
-    widget.Systray(background=colors["systray"], padding=10),
-    widget.Sep(linewidth=0, padding=6, background=colors["systray"]),
+def widgets_list(without_systray=False):
+    widgets = [
+    #     ### Run ###
+    #     widget.Sep(linewidth=0, padding=6, background=colors["start"]),
+    #     widget.Image(
+    #         filename="~/.config/qtile/config/manjaro.png",
+    #         margin=5,
+    #         background=colors["start"],
+    #         mouse_callbacks={"Button1": lambda: os.system("rofi -show drun")},
+    #     ),
+    #     widget.Sep(linewidth=0, padding=6, background=colors["start"]),
+        ### Groups ###
+        widget.Sep(linewidth=0, padding=6, background=colors["groups_bg"]),
+        widget.GroupBox(
+            font=looks["caret_font"],
+            borderwidth=6,
+            active=colors["active"],
+            inactive=colors["inactive"],
+            rounded=False,
+            highlight_method="line",
+            highlight_color=colors["groups_bg"],
+            this_current_screen_border=colors["current_screen_tab"],
+            this_screen_border=colors["color1"],
+            other_screen_border=colors["bg"],
+            foreground=colors["fg"],
+            background=colors["groups_bg"],
+            fontsize=18,
+        ),
+        widget.Sep(padding=6, linewidth=0, background=colors["seperator"]),
+        widget.Prompt(
+            foreground=colors["active"],
+            background=colors["groups_bg"],
+            font="JetBrains Mono Nerd Font",
+            prompt="Woof: "
+        ),
+        widget.Sep(padding=6, linewidth=0, background=colors["seperator"]),
 
-    ### Volume ###
-    widget.Sep(padding=9, linewidth=0, background=colors["color3"]),
-    widget.TextBox(
-        text="volume-off",
-        font="Font Awesome 5 Free Solid",
-        foreground=colors["color3fg"],
-        background=colors["color3"],
-        fontsize=14,
-        padding=0,
-    ),
-    widget.Volume(foreground=colors["color3fg"], background=colors["color3"]),
-    widget.Sep(padding=6, linewidth=0, background=colors["color3"]),
-    # widget.Sep(padding=12, linewidth=0, background=colors["seperator"]),
-    ### Clock ###
-    widget.Sep(padding=6, linewidth=0, background=colors["color1"]),
-    widget.TextBox(
-        foreground=colors["color1fg"],
-        background=colors["color1"],
-        text="calendar-alt",
-        font="Font Awesome 5 Free Solid",
-        #        Uncomment the below snippet to enable calendar as a notification if dunst uses monospace font.
-        #        mouse_callbacks={
-        #            "Button1": lambda: os.system(' notify-send "$(cal)" -i ICON ')
-        #        },
-    ),
-    widget.Clock(
-        foreground=colors["color1fg"],
-        background=colors["color1"],
-        format="%D",
-    ),
-    widget.Sep(padding=6, linewidth=0, background=colors["color3"]),
-    widget.TextBox(
-        foreground=colors["color5fg"],
-        background=colors["color5"],
-        text="clock",
-        font="Font Awesome 5 Free Solid",
-        #        Uncomment the below snippet to enable calendar as a notification if dunst uses monospace font.
-        #        mouse_callbacks={
-        #            "Button1": lambda: os.system(' notify-send "$(cal)" -i ICON ')
-        #        },
-    ),
-    widget.Clock(
+        widget.Spacer(),
+
+        ### Systray ###
+        widget.Systray(background=colors["systray"], padding=10),
+        widget.Sep(linewidth=0, padding=6, background=colors["systray"]),
+    
+        ### Battery ###
+        widget.Sep(padding=9, linewidth=0, background=colors["color2"]),
+        widget.TextBox(
+            text="battery-full",
+            font="Font Awesome 5 Free Solid",
+            foreground=colors["color2fg"],
+            background=colors["color2"],
+            fontsize=28,
+            padding=0,
+        ),
+        widget.Battery(foreground=colors["color2fg"], background=colors["color2"]),
+        widget.Sep(padding=6, linewidth=0, background=colors["color2"]),
+    
+        ### Volume ###
+        widget.Sep(padding=9, linewidth=0, background=colors["color3"]),
+        widget.TextBox(
+            text="volume-off",
+            font="Font Awesome 5 Free Solid",
+            foreground=colors["color3fg"],
+            background=colors["color3"],
+            fontsize=28,
+            padding=0,
+        ),
+        widget.Volume(foreground=colors["color3fg"], background=colors["color3"]),
+        widget.Sep(padding=6, linewidth=0, background=colors["color3"]),
+        # widget.Sep(padding=12, linewidth=0, background=colors["seperator"]),
+        ### Clock ###
+        widget.Sep(padding=6, linewidth=0, background=colors["color1"]),
+        widget.TextBox(
+            foreground=colors["color1fg"],
+            background=colors["color1"],
+            text="calendar-alt",
+            font="Font Awesome 5 Free Solid",
+            #        Uncomment the below snippet to enable calendar as a notification if dunst uses monospace font.
+            #        mouse_callbacks={
+            #            "Button1": lambda: os.system(' notify-send "$(cal)" -i ICON ')
+            #        },
+        ),
+        widget.Clock(
+            foreground=colors["color1fg"],
+            background=colors["color1"],
+            format="%D",
+        ),
+        widget.Sep(padding=6, linewidth=0, background=colors["color3"]),
+        widget.TextBox(
             foreground=colors["color5fg"],
             background=colors["color5"],
-            format="%A - %H:%M"
-    ),
-    widget.Sep(padding=6, linewidth=0, background=colors["color1"]),
-    # widget.Sep(padding=6, linewidth=0, background=colors["seperator"]),
-
-]
+            text="clock",
+            font="Font Awesome 5 Free Solid",
+            #        Uncomment the below snippet to enable calendar as a notification if dunst uses monospace font.
+            #        mouse_callbacks={
+            #            "Button1": lambda: os.system(' notify-send "$(cal)" -i ICON ')
+            #        },
+        ),
+        widget.Clock(
+                foreground=colors["color5fg"],
+                background=colors["color5"],
+                format="%A - %H:%M"
+        ),
+        widget.Sep(padding=6, linewidth=0, background=colors["color1"]),
+        # widget.Sep(padding=6, linewidth=0, background=colors["seperator"]),
+    ]
+    if without_systray:
+        del widgets[6:7]
+    return widgets
 
 # bar_margin = [int(layout_theme["margin"]/2), layout_theme["margin"], 0, layout_theme["margin"]]
 bar_margin = 0
 
 screen0 = Screen(
-#     wallpaper=wallpaper,
-#     wallpaper_mode="fill",
+    wallpaper=wallpaper,
+    wallpaper_mode="fill",
     top=bar.Bar(
        widgets_list(),
        int(looks["panel-size"]),
@@ -297,10 +319,10 @@ screen0 = Screen(
 )
 
 screen1 = Screen(
-     wallpaper=wallpaper,
-     wallpaper_mode="fill",
+    wallpaper=wallpaper,
+    wallpaper_mode="fill",
     top=bar.Bar(
-        widgets_list(),
+       widgets_list(True),
        int(looks["panel-size"]),
        background=colors["bg"],
        opacity=float(looks["panel-opacity"]),
@@ -329,7 +351,6 @@ dgroups_app_rules = []  # type: List
 main = None  # WARNING: this is deprecated and will be removed soon
 follow_mouse_focus = True
 bring_front_click = False
-cursor_warp = True
 floating_layout = layout.Floating(
     **layout_theme,
     float_rules=[

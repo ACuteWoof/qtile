@@ -1,12 +1,14 @@
-#!/bin/bash
-# protonvpn-cli connect -f -p tcp &
+#!/bin/sh
+
 xsetroot -cursor_name left_ptr &
 nm-applet &
 /usr/bin/ibus-daemon -dr &
-# calamares &
-# noisetorch &
 flameshot &
-# easyeffects --gapplication-service &
+easyeffects --gapplication-service &
 xfce4-power-manager &
-# warpd -c ~/.config/warpd/warpdrc &
+syncthing --no-browser &
+xfce4-volumed-pulse &
+sudo fcron &
+mpd &
+touchegg --client &
 picom &

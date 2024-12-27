@@ -14,3 +14,25 @@ error: Could not determine file type.
 info: Opening plain database via sqlite backend.
 warning: sqlite database already exists. Set your database backend to sqlite
 error: Could not determine file type.
+
+(surf:64378): libenchant-WARNING **: 21:19:46.960: broker.vala:159: Error loading plugin: libvoikko.so.1: cannot open shared object file: No such file or directory
+
+(surf:64378): libenchant-WARNING **: 21:19:46.963: broker.vala:159: Error loading plugin: libhunspell-1.7.so.0: cannot open shared object file: No such file or directory
+
+(surf:64378): libenchant-WARNING **: 21:19:46.963: broker.vala:159: Error loading plugin: libnuspell.so.5: cannot open shared object file: No such file or directory
+
+(surf:64378): libenchant-WARNING **: 21:19:46.963: broker.vala:159: Error loading plugin: libhspell.so.0: cannot open shared object file: No such file or directory
+
+(surf:64378): libenchant-WARNING **: 21:19:46.963: broker.vala:159: Error loading plugin: libaspell.so.15: cannot open shared object file: No such file or directory
+Could not read style file: /home/acutewoof/.surf/styles/default.css
+
+(surf:64652): libenchant-WARNING **: 21:19:56.025: broker.vala:159: Error loading plugin: libvoikko.so.1: cannot open shared object file: No such file or directory
+
+(surf:64652): libenchant-WARNING **: 21:19:56.025: broker.vala:159: Error loading plugin: libhunspell-1.7.so.0: cannot open shared object file: No such file or directory
+
+(surf:64652): libenchant-WARNING **: 21:19:56.025: broker.vala:159: Error loading plugin: libnuspell.so.5: cannot open shared object file: No such file or directory
+
+(surf:64652): libenchant-WARNING **: 21:19:56.025: broker.vala:159: Error loading plugin: libhspell.so.0: cannot open shared object file: No such file or directory
+
+(surf:64652): libenchant-WARNING **: 21:19:56.025: broker.vala:159: Error loading plugin: libaspell.so.15: cannot open shared object file: No such file or directory
+Could not read style file: /home/acutewoof/.surf/styles/default.css

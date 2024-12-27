@@ -44,18 +44,17 @@ The mouse can also be used to switch focus between windows by simply hovering ov
 
 - <kbd>[mod]</kbd> <kbd>Return</kbd> launches the terminal (alacritty)
 - <kbd>[mod]</kbd> <kbd>R</kbd> opens the Rofi run launcher
+- <kbd>[mod]</kbd> <kbd>P</kbd> opens the Rofi power menu
 - <kbd>[mod]</kbd> <kbd>B</kbd> launches the web browser (brave)
 - <kbd>[mod]</kbd> <kbd>C</kbd> launches the file manager (vifm)
 - <kbd>[mod]</kbd> <kbd>Z</kbd> opens copied PDF URL in Zathura
 - <kbd>[mod]</kbd> <kbd>Y</kbd> opens copied YouTube URL in MPV (using yt-dlp)
 - <kbd>[mod]</kbd> <kbd>F</kbd> opens the Flameshot GUI
+- <kbd>[mod]</kbd> <kbd>S</kbd> takes a full screenshot using Scrot
 - <kbd>[mod]</kbd> <kbd>T</kbd> spawns a command using a prompt
 - <kbd>[mod]</kbd> <kbd>V</kbd> shows the active windows through Rofi
 - <kbd>[mod]</kbd> <kbd>D</kbd> sends a notification including the current date and time
 - <kbd>[mod]</kbd> <kbd>Q</kbd> kills focused window
-- <kbd>[mod]</kbd> <kbd>CTRL</kbd> <kbd>S</kbd> takes a full screenshot using Scrot to clipboard
-- <kbd>[mod]</kbd> <kbd>CTRL</kbd> <kbd>F</kbd> takes a screenshot of the focused window using Scrot to clipboard
-- <kbd>[mod]</kbd> <kbd>CTRL</kbd> <kbd>P</kbd> opens the Rofi power menu
 - <kbd>[mod]</kbd> <kbd>CTRL</kbd> <kbd>R</kbd> restarts Qtile
 - <kbd>[mod]</kbd> <kbd>CTRL</kbd> <kbd>Q</kbd> shuts down Qtile
 
