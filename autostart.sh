@@ -1,6 +1,7 @@
 #!/bin/sh
 
 xsetroot -cursor_name left_ptr &
+~/.config/qtile/configure-x.sh &
 nm-applet &
 dunst &
 /usr/bin/ibus-daemon -dr &
