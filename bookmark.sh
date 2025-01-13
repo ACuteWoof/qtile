@@ -2,8 +2,8 @@
 
 if [ "$ROFI_RETV" = "1" ] || [ "$ROFI_RETV" = "2" ]
 then
-	notify-send "Copied $@ to clipboard."
 	echo "$@" | xsel -i -b
+	notify-send "Copied $@ to clipboard."
 	exit 0
 fi
 

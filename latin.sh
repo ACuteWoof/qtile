@@ -1,8 +1,14 @@
 #!/bin/sh
 
-if [ "$ROFI_RETV" = "1" ] || [ "$ROFI_RETV" = "2" ]
+if [ "$ROFI_RETV" = "1" ] 
+then 
+	echo "${@#[$'\r\t\n ']}" | xsel -i -b
+	notify-send "Copied ${@#[$'\r\t\n ']} to clipboard."
+	exit 0
+fi
+if [ "$ROFI_RETV" = "2" ]
 then
-	zen-browser "https://www.online-latin-dictionary.com/latin-english-dictionary.php?parola=$@" --new-tab
+	meaning "$@" -la
 	exit 0
 fi
 
