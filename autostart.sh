@@ -5,7 +5,6 @@ xsetroot -cursor_name left_ptr &
 nm-applet &
 dunst &
 /usr/bin/ibus-daemon -dr &
-flameshot &
 easyeffects --gapplication-service &
 xfce4-power-manager &
 syncthing --no-browser &
