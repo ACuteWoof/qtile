@@ -1,5 +1,6 @@
 #!/bin/sh
 
+warpd &
 xsetroot -cursor_name left_ptr &
 nm-applet &
 dunst &
