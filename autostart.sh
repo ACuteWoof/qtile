@@ -6,6 +6,7 @@ nm-applet &
 dunst &
 /usr/bin/ibus-daemon -dr &
 easyeffects --gapplication-service &
+thunderbird &
 xfce4-power-manager &
 syncthing --no-browser &
 xfce4-volumed-pulse &
