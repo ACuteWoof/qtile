@@ -1,3 +1,3 @@
 #!/bin/sh
 
-brave $(xsel -o -b)
+zen-browser $(xsel -o -b) --new-tab
