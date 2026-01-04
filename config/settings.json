@@ -1,1 +1,10 @@
-{"looks": {"wallpaper": "/home/acutewoof/Pictures/wallpapers/0002.jpg", "caret_font_size": 49, "caret_font": "Font Awesome 5 Free Solid", "panel-opacity": 1.0, "panel-size": 40}, "display": {"screen-count": 1}}
+{
+  "looks": {
+    "wallpaper": "/home/acutewoof/Pictures/wallpapers/0010.jpg",
+    "caret_font_size": 49,
+    "caret_font": "Font Awesome 5 Free Solid",
+    "panel-opacity": 1.0,
+    "panel-size": 40
+  },
+  "display": { "screen-count": 1 }
+}
