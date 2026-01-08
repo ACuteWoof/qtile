@@ -23,7 +23,7 @@ wallpaper = looks["wallpaper"]
 home = os.path.expanduser("~")
 mod = "mod4"
 terminal = "alacritty"
-file_manager = "alacritty -e ranger"
+file_manager = "alacritty -e lf"
 browser = f"{home}/.config/qtile/browse.sh"
 
 keys = [
