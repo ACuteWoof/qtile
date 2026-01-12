@@ -87,8 +87,8 @@ keys = [
     Key(
         [mod], "v", lazy.spawn("rofi -show window"), desc="Show active windows in rofi"
     ),
-    # Key([mod], "f", lazy.spawn("flameshot gui"), desc="Open flameshot gui"),
-    Key([mod], "f", lazy.spawn("ksnip -r"), desc="Take new screenshot with ksnip"),
+    Key([mod], "f", lazy.spawn("flameshot gui"), desc="Open flameshot gui"),
+    # Key([mod], "f", lazy.spawn("ksnip -r"), desc="Take new screenshot with ksnip"),
     Key([mod], "s", lazy.spawn("scrot - | xclip -selection clipboard -target image/png"), desc="Take full screenshot to clipboard"),
     Key([mod, "control"], "f", lazy.spawn("scrot -w $(xdo id -p PID) - | xclip -selection clipboard -target image/png"), desc="Take current window as screenshot to clipboard"),
     Key([mod], "e", lazy.spawn("euphonica"), desc="Open music player"),
