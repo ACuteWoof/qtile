@@ -1,3 +1,4 @@
 #!/bin/sh
 
-zen-browser $(xsel -o -b) --new-tab
+# qutebrowser $(xsel -o -b)
+qutebrowser
