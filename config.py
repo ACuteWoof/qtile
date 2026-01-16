@@ -23,7 +23,7 @@ wallpaper = looks["wallpaper"]
 home = os.path.expanduser("~")
 mod = "mod4"
 terminal = "alacritty"
-file_manager = "alacritty -e lfub"
+file_manager = "alacritty -e lfub -command 'set sortby btime; set info btime'"
 browser = f"{home}/.config/qtile/browse.sh"
 
 keys = [
