@@ -7,7 +7,7 @@ dunst &
 /usr/bin/ibus-daemon -dr &
 easyeffects --gapplication-service &
 xfce4-power-manager &
-syncthing --no-browser &
+birdtray &
 xfce4-volumed-pulse &
 sudo fcron &
 mpd &
