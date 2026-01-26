@@ -309,7 +309,7 @@ bar_margin = 0
 
 screen0 = Screen(
     wallpaper=wallpaper,
-    wallpaper_mode="fill",
+    wallpaper_mode="center",
     top=bar.Bar(
        widgets_list(),
        int(looks["panel-size"]),
@@ -319,19 +319,19 @@ screen0 = Screen(
    ),
 )
 
-screen1 = Screen(
-    wallpaper=wallpaper,
-    wallpaper_mode="fill",
-    top=bar.Bar(
-       widgets_list(True),
-       int(looks["panel-size"]),
-       background=colors["bg"],
-       opacity=float(looks["panel-opacity"]),
-       margin=bar_margin,
-   ),
-)
+# screen1 = Screen(
+#     wallpaper=wallpaper,
+#     wallpaper_mode="fill",
+#     left=bar.Bar(
+#        widgets_list(True),
+#        int(looks["panel-size"]),
+#        background=colors["bg"],
+#        opacity=float(looks["panel-opacity"]),
+#        margin=bar_margin,
+#    ),
+# )
 
-screens = [screen0, screen1]
+screens = [screen0]
 
 # Drag floating layouts.
 mouse = [
