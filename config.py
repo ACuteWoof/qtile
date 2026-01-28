@@ -19,6 +19,7 @@ with open("{}/.config/qtile/config/colors.json".format(os.getenv("HOME"))) as fi
 
 colors = colors_json
 wallpaper = looks["wallpaper"]
+wallpaper_mode = looks["wallpaper_mode"]
 
 home = os.path.expanduser("~")
 mod = "mod4"
@@ -309,7 +310,7 @@ bar_margin = 0
 
 screen0 = Screen(
     wallpaper=wallpaper,
-    wallpaper_mode="center",
+    wallpaper_mode=wallpaper_mode,
     top=bar.Bar(
        widgets_list(),
        int(looks["panel-size"]),
