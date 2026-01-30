@@ -9,5 +9,6 @@ if [[ "$1" != "" ]]; then
 	qutebrowser "http://lollab:5555/search?q=$search"
 	exit 0
 fi
+mpc current --format="%artist% %title%"
 echo "Cancel"
 mpc listall --format="%artist% %title%"
