@@ -1,7 +1,14 @@
 #!/bin/sh
 
+
 if [ -z "$IMAPURL" ]; then
 	echo "IMAPURL not set"
+	echo "Trying to set with aerc config"
+	IMAPURL=$(grep "^source" ~/.config/aerc/accounts.conf | sed "s/source.*= //g")
+	if [ -z "$IMAPURL" ]; then
+		echo "Could not set IMAPURL from aerc config"
+		exit 1
+	fi
 	exit 1
 fi
 
