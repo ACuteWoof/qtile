@@ -13,3 +13,4 @@ sudo fcron &
 mpd &
 touchegg --client &
 picom &
+~/.config/qtile/mail-check.sh &
