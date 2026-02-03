@@ -9,7 +9,6 @@ if [ -z "$IMAPURL" ]; then
 		echo "Could not set IMAPURL from aerc config"
 		exit 1
 	fi
-	exit 1
 fi
 
 cat ~/.local/share/latestmail || echo "Date: Thu, 01 Jan 1970 00:00:00 +0000" > ~/.local/share/latestmail
