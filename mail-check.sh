@@ -28,8 +28,6 @@ while true; do
 
 	difference=$((currtimestamp - lasttimestamp))
 
-	echo $difference
-
 	if [ $difference -gt 0 ]; then
 		notify-send -a "Mail Checker" -w  "New Mail" "From: $FROM\nSubject: $SUBJECT"
 	fi
