@@ -1,7 +1,7 @@
 {
   "looks": {
     "wallpaper": "/home/acutewoof/Pictures/wallpapers/current",
-    "wallpaper_mode": "center",
+    "wallpaper_mode": "fill",
     "caret_font_size": 49,
     "caret_font": "Font Awesome 5 Free Solid",
     "panel-opacity": 1.0,

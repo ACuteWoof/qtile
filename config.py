@@ -395,11 +395,6 @@ floating_layout = layout.Floating(
 def start_once():
     subprocess.call([home + "/.config/qtile/autostart.sh"])
 
-@hook.subscribe.startup
-def runner():
-    subprocess.Popen(["xsetroot", "-cursor_name", "left_ptr"])
-    # subprocess.Popen(["xwallpaper", "--zoom", wallpaper])
-
 floating_types = ["notification", "toolbar", "splash", "dialog", "dock"]
 
 @lazy.function
