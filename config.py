@@ -1,6 +1,7 @@
 import os
 import json
 import subprocess
+import random
 
 from libqtile import bar, layout, widget
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
@@ -20,6 +21,8 @@ with open("{}/.config/qtile/config/colors.json".format(os.getenv("HOME"))) as fi
 colors = colors_json
 wallpaper = looks["wallpaper"]
 wallpaper_mode = looks["wallpaper_mode"]
+wallpapers_dir = looks["wallpapers_dir"]
+is_random = looks["is_random"] == 1
 
 home = os.path.expanduser("~")
 mod = "mod4"
@@ -308,8 +311,30 @@ def widgets_list(without_systray=False):
 # bar_margin = [int(layout_theme["margin"]/2), layout_theme["margin"], 0, layout_theme["margin"]]
 bar_margin = 0
 
+def random_wallpaper(wallpapers_dir: str, default_wallpaper: str) -> str:
+    # Common image file extensions
+    image_extensions = {'.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp', '.tiff', '.svg'}
+    
+    image_files = []
+    
+    # Walk through directory and all subdirectories
+    for root, dirs, files in os.walk(wallpapers_dir):
+        for file in files:
+            # Check if file has an image extension (case-insensitive)
+            if os.path.splitext(file)[1].lower() in image_extensions:
+                full_path = os.path.join(root, file)
+                image_files.append(full_path)
+    
+    # Return random image if found, otherwise return default
+    if image_files:
+        return random.choice(image_files)
+    else:
+        return default_wallpaper
+
+final_wallpaper = random_wallpaper(wallpapers_dir, wallpaper) if is_random else wallpaper
+
 screen0 = Screen(
-    wallpaper=wallpaper,
+    wallpaper=final_wallpaper,
     wallpaper_mode=wallpaper_mode,
     top=bar.Bar(
        widgets_list(),
