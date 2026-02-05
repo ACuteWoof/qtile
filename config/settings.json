@@ -3,7 +3,7 @@
     "wallpapers_dir": "/home/acutewoof/Pictures/wallpapers/",
     "wallpaper": "/home/acutewoof/Pictures/wallpapers/0001.jpg",
     "is_random": 1,
-    "wallpaper_mode": "fill",
+    "wallpaper_mode": "center",
     "caret_font_size": 49,
     "caret_font": "Font Awesome 5 Free Solid",
     "panel-opacity": 1.0,
