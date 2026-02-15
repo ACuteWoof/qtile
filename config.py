@@ -98,7 +98,6 @@ keys = [
     Key([mod], "e", lazy.spawn("alacritty -e rmpc"), desc="Open music player"),
     Key([mod], "z", lazy.spawn(f"{home}/.config/qtile/view.sh"), desc="View in Zathura"),
     Key([mod], "y", lazy.spawn(f"{home}/.config/qtile/yt.sh"), desc="Open YouTube video in MPV"),
-    Key([mod], "p", lazy.spawn("rofi -show dumb -modi dumb:~/.config/qtile/dumb.sh"), desc="Search dumb"),
     Key([mod], "g", lazy.spawn("rofi -show bookmarks -modi bookmarks:~/.config/qtile/bookmark.sh"), desc="Bookmarks"),
     Key([mod], "w", lazy.spawn(f"{home}/.config/qtile/addbookmark.sh"), desc="Add bookmark"),
     Key([mod, "control"], "p", lazy.spawn("rofi -show power-menu -modi power-menu:rofi-power-menu"), desc="Power Menu"),
@@ -135,7 +134,7 @@ for i in groups:
 
 group_names = [
     ("code", {"layout": "bsp"}),
-    ("wifi", {"layout": "max"}),
+    ("wifi", {"layout": "bsp"}),
     ("terminal", {"layout": "bsp"}),
     ("stream", {"layout": "bsp"}),
     ("project-diagram", {"layout": "bsp"}),
