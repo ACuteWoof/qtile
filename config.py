@@ -27,7 +27,7 @@ is_random = looks["is_random"] == 1
 home = os.path.expanduser("~")
 mod = "mod4"
 terminal = "uxterm"
-file_manager = "alacritty -e lfub -command 'set sortby btime; set info btime'"
+file_manager = "uxterm -e lfub -command 'set sortby btime; set info btime'"
 browser = f"{home}/.config/qtile/browse.sh"
 
 keys = [

@@ -42,7 +42,7 @@ The mouse can also be used to switch focus between windows by simply hovering ov
 
 ## Miscellaneous and launching programs
 
-- <kbd>[mod]</kbd> <kbd>Return</kbd> launches the terminal (alacritty)
+- <kbd>[mod]</kbd> <kbd>Return</kbd> launches the terminal (uxterm)
 - <kbd>[mod]</kbd> <kbd>R</kbd> opens the Rofi run launcher
 - <kbd>[mod]</kbd> <kbd>P</kbd> opens the Rofi power menu
 - <kbd>[mod]</kbd> <kbd>B</kbd> launches the web browser (brave)
