@@ -26,7 +26,7 @@ is_random = looks["is_random"] == 1
 
 home = os.path.expanduser("~")
 mod = "mod4"
-terminal = "alacritty"
+terminal = "uxterm"
 file_manager = "alacritty -e lfub -command 'set sortby btime; set info btime'"
 browser = f"{home}/.config/qtile/browse.sh"
 
@@ -253,6 +253,33 @@ def widgets_list(without_systray=False):
         ),
         widget.Battery(foreground=colors["color2fg"], background=colors["color2"]),
         widget.Sep(padding=6, linewidth=0, background=colors["color2"]),
+
+        ### Thermal ###
+        widget.Sep(padding=9, linewidth=0, background=colors["color1"]),
+        widget.TextBox(
+            text="mug-hot",
+            font="Font Awesome 5 Free Solid",
+            foreground=colors["color1fg"],
+            background=colors["color1"],
+            fontsize=18,
+            padding=0,
+        ),
+        widget.ThermalSensor(foreground=colors["color1fg"], background=colors["color1"], tag_sensor="Package id 0"),
+        widget.Sep(padding=6, linewidth=0, background=colors["color1"]),
+
+        ### Memory ###
+        widget.Sep(padding=9, linewidth=0, background=colors["color4"]),
+        widget.TextBox(
+            text="memory",
+            font="Font Awesome 5 Free Solid",
+            foreground=colors["color4fg"],
+            background=colors["color4"],
+            fontsize=18,
+            padding=0,
+        ),
+        widget.Memory(foreground=colors["color4fg"], background=colors["color4"]),
+        widget.Sep(padding=6, linewidth=0, background=colors["color4"]),
+        # widget.Sep(padding=12, linewidth=0, background=colors["seperator"]),
     
         ### Volume ###
         widget.Sep(padding=9, linewidth=0, background=colors["color3"]),
@@ -375,7 +402,7 @@ mouse = [
 dgroups_key_binder = None
 dgroups_app_rules = []  # type: List
 main = None  # WARNING: this is deprecated and will be removed soon
-follow_mouse_focus = True
+follow_mouse_focus = False
 bring_front_click = False
 floating_layout = layout.Floating(
     **layout_theme,
