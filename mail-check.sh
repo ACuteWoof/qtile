@@ -1,0 +1,37 @@
+#!/bin/sh
+
+if [ -z "$IMAPURL" ]; then
+	echo "IMAPURL not set"
+	echo "Trying to set with aerc config"
+	IMAPURL=$(grep "^source" ~/.config/aerc/accounts.conf | sed "s/source.*= //g")
+	if [ -z "$IMAPURL" ]; then
+		echo "Could not set IMAPURL from aerc config"
+		exit 1
+	fi
+fi
+
+cat ~/.local/share/latestmail || echo "Date: Thu, 01 Jan 1970 00:00:00 +0000" > ~/.local/share/latestmail
+
+sleep 60
+
+while true; do
+	lastdate=$(grep '^Date:' ~/.local/share/latestmail | cut -d' ' -f2-)
+	curl --silent "$IMAPURL/INBOX;UID=*;SECTION=HEADER.FIELDS%20(FROM%20SUBJECT%20DATE)" > ~/.local/share/latestmail
+	
+	input=$(cat ~/.local/share/latestmail)
+	
+	FROM=$(echo "$input" | grep '^From:' | cut -d' ' -f2-)
+	DATE=$(echo "$input" | grep '^Date:' | cut -d' ' -f2-)
+	SUBJECT=$(echo "$input" | grep '^Subject:' | cut -d' ' -f2-)
+
+	lasttimestamp=$(date -d "$lastdate" +%s)
+	currtimestamp=$(date -d "$DATE" +%s)
+
+	difference=$((currtimestamp - lasttimestamp))
+
+	if [ $difference -gt 0 ]; then
+		notify-send -a "Mail Checker" -w  "New Mail" "From: $FROM\nSubject: $SUBJECT"
+	fi
+	
+	sleep 300
+done

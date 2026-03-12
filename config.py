@@ -1,0 +1,442 @@
+import os
+import json
+import subprocess
+import random
+
+from libqtile import bar, layout, widget
+from libqtile.config import Click, Drag, Group, Key, Match, Screen
+from libqtile.lazy import lazy
+from libqtile import qtile
+from libqtile import hook
+
+with open("{}/.config/qtile/config/settings.json".format(os.getenv("HOME"))) as file:
+    settings = json.load(file)
+
+looks: dict = settings["looks"]
+display: dict = settings["display"]
+
+with open("{}/.config/qtile/config/colors.json".format(os.getenv("HOME"))) as file:
+    colors_json = json.load(file)
+
+colors = colors_json
+wallpaper = looks["wallpaper"]
+wallpaper_mode = looks["wallpaper_mode"]
+wallpapers_dir = looks["wallpapers_dir"]
+is_random = looks["is_random"] == 1
+
+home = os.path.expanduser("~")
+mod = "mod4"
+terminal = "alacritty"
+file_manager = "alacritty -e lfub -command 'set sortby btime; set info btime'"
+browser = f"{home}/.config/qtile/browse.sh"
+
+keys = [
+    # Switch between windows
+    Key([mod], "h", lazy.layout.left(), desc="Move focus to left"),
+    Key([mod], "l", lazy.layout.right(), desc="Move focus to right"),
+    Key([mod], "j", lazy.layout.down(), desc="Move focus down"),
+    Key([mod], "k", lazy.layout.up(), desc="Move focus up"),
+    Key([mod], "space", lazy.layout.next(), desc="Move window focus to other window"),
+    # Move windows between left/right columns or move up/down in current stack.
+    # Moving out of range in Columns layout will create new column.
+    Key(
+        [mod, "shift"], "h", lazy.layout.shuffle_left(), desc="Move window to the left"
+    ),
+    Key(
+        [mod, "shift"],
+        "l",
+        lazy.layout.shuffle_right(),
+        desc="Move window to the right",
+    ),
+    Key([mod, "shift"], "j", lazy.layout.shuffle_down(), desc="Move window down"),
+    Key([mod, "shift"], "k", lazy.layout.shuffle_up(), desc="Move window up"),
+    # Grow windows. If current window is on the edge of screen and direction
+    # will be to screen edge - window would shrink.
+    Key([mod, "control"], "h", lazy.layout.grow_left(), desc="Grow window to the left"),
+    Key(
+        [mod, "control"], "l", lazy.layout.grow_right(), desc="Grow window to the right"
+    ),
+    Key([mod, "control"], "j", lazy.layout.grow_down(), desc="Grow window down"),
+    Key([mod, "control"], "k", lazy.layout.grow_up(), desc="Grow window up"),
+    Key([mod], "n", lazy.layout.normalize(), desc="Reset all window sizes"),
+    Key([mod], "i", lazy.layout.grow()),
+    Key([mod], "m", lazy.layout.shrink()),
+    Key([mod], "n", lazy.layout.normalize()),
+    Key([mod], "o", lazy.layout.maximize()),
+    # Toggle between split and unsplit sides of stack.
+    # Split = all windows displayed
+    # Unsplit = 1 window displayed, like Max layout, but still with
+    # multiple stack panes
+    Key(
+        [mod, "shift"],
+        "Return",
+        lazy.layout.toggle_split(),
+        desc="Toggle between split and unsplit sides of stack",
+    ),
+    Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
+    # Toggle between different layouts as defined below
+    Key([mod], "Tab", lazy.next_layout(), desc="Toggle between layouts"),
+    Key([mod], "q", lazy.window.kill(), desc="Kill focused window"),
+    Key([mod, "control"], "r", lazy.restart(), desc="Restart Qtile"),
+    Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
+    Key(
+        [mod],
+        "r",
+        lazy.spawn("rofi -show drun"),
+        desc="Spawn a command using rofi",
+    ),
+    Key([mod], "t", lazy.spawncmd(), desc="Spawn a command using a prompt"),
+    Key([mod], "b", lazy.spawn(browser), desc="Launch in browser"),
+    Key([mod], "c", lazy.spawn(file_manager), desc="Launch File Manager"),
+    Key(
+        [mod], "v", lazy.spawn("rofi -show window"), desc="Show active windows in rofi"
+    ),
+    Key([mod], "f", lazy.spawn("flameshot gui"), desc="Open flameshot gui"),
+    # Key([mod], "f", lazy.spawn("ksnip -r"), desc="Take new screenshot with ksnip"),
+    Key([mod], "s", lazy.spawn("scrot - | xclip -selection clipboard -target image/png"), desc="Take full screenshot to clipboard"),
+    Key([mod, "control"], "f", lazy.spawn("scrot -w $(xdo id -p PID) - | xclip -selection clipboard -target image/png"), desc="Take current window as screenshot to clipboard"),
+    Key([mod], "e", lazy.spawn("alacritty -e rmpc"), desc="Open music player"),
+    Key([mod], "z", lazy.spawn(f"{home}/.config/qtile/view.sh"), desc="View in Zathura"),
+    Key([mod], "y", lazy.spawn(f"{home}/.config/qtile/yt.sh"), desc="Open YouTube video in MPV"),
+    Key([mod], "g", lazy.spawn("rofi -show bookmarks -modi bookmarks:~/.config/qtile/bookmark.sh"), desc="Bookmarks"),
+    Key([mod], "w", lazy.spawn(f"{home}/.config/qtile/addbookmark.sh"), desc="Add bookmark"),
+    Key([mod, "control"], "p", lazy.spawn("rofi -show power-menu -modi power-menu:rofi-power-menu"), desc="Power Menu"),
+    # Toggle between screens
+    Key([mod], 'period', lazy.next_screen(), desc='Next display'),
+    Key([mod, "control"], 'b', lazy.hide_show_bar(), desc='Toggle Qtile Bar'),
+]
+
+groups = [Group(i) for i in "1234567890"]
+
+for i in groups:
+    keys.extend(
+        [
+            # mod1 + letter of group = switch to group
+            Key(
+                [mod],
+                i.name,
+                lazy.group[i.name].toscreen(),
+                desc="Switch to group {}".format(i.name),
+            ),
+            # mod1+shift+group letter = switch to & move focused window to group
+            Key(
+                [mod, "shift"],
+                i.name,
+                lazy.window.togroup(i.name, switch_group=True),
+                desc="Switch to & move focused window to group {}".format(i.name),
+            ),
+            # Or, use below if you prefer not to switch to that group.
+            # # mod1 + shift + letter of group = move focused window to group
+            # Key([mod, "shift"], i.name, lazy.window.togroup(i.name),
+            #     desc="move focused window to group {}".format(i.name)),
+        ]
+    )
+
+group_names = [
+    ("code", {"layout": "bsp"}),
+    ("wifi", {"layout": "bsp"}),
+    ("terminal", {"layout": "bsp"}),
+    ("stream", {"layout": "bsp"}),
+    ("project-diagram", {"layout": "bsp"}),
+    ("code-branch", {"layout": "bsp"}),
+    ("tv", {"layout": "bsp"}),
+    ("coffee", {"layout": "bsp"}),
+    ("record-vinyl", {"layout": "monadtall"}),
+]
+
+groups = [Group(name, **kwargs) for name, kwargs in group_names]
+
+for i, (name, kwargs) in enumerate(group_names, 1):
+    keys.append(Key([mod], str(i), lazy.group[name].toscreen()))
+    keys.append(Key([mod, "shift"], str(i), lazy.window.togroup(name)))
+
+layout_theme = {
+    "border_width": 2,
+    "margin": 4,
+    #     "border_focus": colors["color1"],
+    #     "border_normal": colors["color2"],
+    "border_focus": colors["border_focus"],
+    "border_normal": colors["border_normal"],
+}
+
+layouts = [
+    layout.MonadTall(**layout_theme),
+    layout.Floating(**layout_theme),
+    layout.Max(**layout_theme),
+    layout.Bsp(**layout_theme),
+    layout.Zoomy(**layout_theme),
+]
+
+widget_defaults = dict(
+    font="Monaspace Radon Medium",
+    fontsize=20,
+    padding=6,
+)
+extension_defaults = widget_defaults.copy()
+
+power_widgets: list = [
+    widget.Sep(
+        linewidth=0,
+        padding=8,
+        background=colors["seperator"],
+        foreground=colors["color2fg"],
+    ),
+    widget.TextBox(
+        text="Shutdown",
+        background=colors["color2"],
+        foreground=colors["color2fg"],
+        mouse_callbacks={"Button1": lambda: qtile.cmd_spawn("shutdown now")},
+    ),
+    widget.TextBox(
+        text="|", background=colors["color2"], foreground=colors["color2fg"]
+    ),
+    widget.TextBox(
+        text="Reboot",
+        background=colors["color2"],
+        foreground=colors["color2fg"],
+        mouse_callbacks={"Button1": lambda: qtile.cmd_spawn("reboot")},
+    ),
+]
+
+def widgets_list(without_systray=False):
+    widgets = [
+    #     ### Run ###
+    #     widget.Sep(linewidth=0, padding=6, background=colors["start"]),
+    #     widget.Image(
+    #         filename="~/.config/qtile/config/manjaro.png",
+    #         margin=5,
+    #         background=colors["start"],
+    #         mouse_callbacks={"Button1": lambda: os.system("rofi -show drun")},
+    #     ),
+    #     widget.Sep(linewidth=0, padding=6, background=colors["start"]),
+        ### Groups ###
+        widget.Sep(linewidth=0, padding=6, background=colors["groups_bg"]),
+        widget.GroupBox(
+            font=looks["caret_font"],
+            borderwidth=6,
+            active=colors["active"],
+            inactive=colors["inactive"],
+            rounded=False,
+            highlight_method="line",
+            highlight_color=colors["groups_bg"],
+            this_current_screen_border=colors["current_screen_tab"],
+            this_screen_border=colors["color1"],
+            other_screen_border=colors["bg"],
+            foreground=colors["fg"],
+            background=colors["groups_bg"],
+            fontsize=18,
+        ),
+        widget.Sep(padding=6, linewidth=0, background=colors["seperator"]),
+        widget.Prompt(
+            foreground=colors["active"],
+            background=colors["groups_bg"],
+            font="Monaspace Neon",
+            prompt="Woof: "
+        ),
+        widget.Sep(padding=6, linewidth=0, background=colors["seperator"]),
+
+        widget.Spacer(),
+
+        ### Systray ###
+        widget.Systray(background=colors["systray"], padding=10),
+        widget.Sep(linewidth=0, padding=6, background=colors["systray"]),
+    
+        ### Battery ###
+        widget.Sep(padding=9, linewidth=0, background=colors["color2"]),
+        widget.TextBox(
+            text="battery-full",
+            font="Font Awesome 5 Free Solid",
+            foreground=colors["color2fg"],
+            background=colors["color2"],
+            fontsize=28,
+            padding=0,
+        ),
+        widget.Battery(foreground=colors["color2fg"], background=colors["color2"]),
+        widget.Sep(padding=6, linewidth=0, background=colors["color2"]),
+    
+        ### Volume ###
+        widget.Sep(padding=9, linewidth=0, background=colors["color3"]),
+        widget.TextBox(
+            text="volume-off",
+            font="Font Awesome 5 Free Solid",
+            foreground=colors["color3fg"],
+            background=colors["color3"],
+            fontsize=28,
+            padding=0,
+        ),
+        widget.Volume(foreground=colors["color3fg"], background=colors["color3"]),
+        widget.Sep(padding=6, linewidth=0, background=colors["color3"]),
+        # widget.Sep(padding=12, linewidth=0, background=colors["seperator"]),
+        ### Clock ###
+        widget.Sep(padding=6, linewidth=0, background=colors["color1"]),
+        widget.TextBox(
+            foreground=colors["color1fg"],
+            background=colors["color1"],
+            text="calendar-alt",
+            font="Font Awesome 5 Free Solid",
+            #        Uncomment the below snippet to enable calendar as a notification if dunst uses monospace font.
+            #        mouse_callbacks={
+            #            "Button1": lambda: os.system(' notify-send "$(cal)" -i ICON ')
+            #        },
+        ),
+        widget.Clock(
+            foreground=colors["color1fg"],
+            background=colors["color1"],
+            format="%D",
+        ),
+        widget.Sep(padding=6, linewidth=0, background=colors["color3"]),
+        widget.TextBox(
+            foreground=colors["color5fg"],
+            background=colors["color5"],
+            text="clock",
+            font="Font Awesome 5 Free Solid",
+            #        Uncomment the below snippet to enable calendar as a notification if dunst uses monospace font.
+            #        mouse_callbacks={
+            #            "Button1": lambda: os.system(' notify-send "$(cal)" -i ICON ')
+            #        },
+        ),
+        widget.Clock(
+                foreground=colors["color5fg"],
+                background=colors["color5"],
+                format="%A - %H:%M"
+        ),
+        widget.Sep(padding=6, linewidth=0, background=colors["color1"]),
+        # widget.Sep(padding=6, linewidth=0, background=colors["seperator"]),
+    ]
+    if without_systray:
+        del widgets[6:7]
+    return widgets
+
+# bar_margin = [int(layout_theme["margin"]/2), layout_theme["margin"], 0, layout_theme["margin"]]
+bar_margin = 0
+
+def random_wallpaper(wallpapers_dir: str, default_wallpaper: str) -> str:
+    # Common image file extensions
+    image_extensions = {'.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp', '.tiff', '.svg'}
+    
+    image_files = []
+    
+    # Walk through directory and all subdirectories
+    for root, dirs, files in os.walk(wallpapers_dir):
+        for file in files:
+            # Check if file has an image extension (case-insensitive)
+            if os.path.splitext(file)[1].lower() in image_extensions:
+                full_path = os.path.join(root, file)
+                image_files.append(full_path)
+    
+    # Return random image if found, otherwise return default
+    if image_files:
+        return random.choice(image_files)
+    else:
+        return default_wallpaper
+
+final_wallpaper = random_wallpaper(wallpapers_dir, wallpaper) if is_random else wallpaper
+
+screen0 = Screen(
+    wallpaper=final_wallpaper,
+    wallpaper_mode=wallpaper_mode,
+    top=bar.Bar(
+       widgets_list(),
+       int(looks["panel-size"]),
+       background=colors["bg"],
+       opacity=float(looks["panel-opacity"]),
+       margin=bar_margin,
+   ),
+)
+
+# screen1 = Screen(
+#     wallpaper=wallpaper,
+#     wallpaper_mode="fill",
+#     left=bar.Bar(
+#        widgets_list(True),
+#        int(looks["panel-size"]),
+#        background=colors["bg"],
+#        opacity=float(looks["panel-opacity"]),
+#        margin=bar_margin,
+#    ),
+# )
+
+screens = [screen0]
+
+# Drag floating layouts.
+mouse = [
+    Drag(
+        [mod],
+        "Button1",
+        lazy.window.set_position_floating(),
+        start=lazy.window.get_position(),
+    ),
+    Drag(
+        [mod], "Button3", lazy.window.set_size_floating(), start=lazy.window.get_size()
+    ),
+    Click([mod], "Button2", lazy.window.bring_to_front()),
+]
+
+dgroups_key_binder = None
+dgroups_app_rules = []  # type: List
+main = None  # WARNING: this is deprecated and will be removed soon
+follow_mouse_focus = True
+bring_front_click = False
+floating_layout = layout.Floating(
+    **layout_theme,
+    float_rules=[
+        # Run the utility of `xprop` to see the wm class and name of an X client.
+        *layout.Floating.default_float_rules,
+        Match(wm_type="utility"),
+        Match(wm_type="notification"),
+        Match(wm_type="toolbar"),
+        Match(wm_type="splash"),
+        Match(wm_type="dialog"),
+        Match(wm_class="confirm"),
+        Match(wm_class="dialog"),
+        Match(wm_class="download"),
+        Match(wm_class="error"),
+        Match(wm_class="file_progress"),
+        Match(wm_class="notification"),
+        Match(wm_class="splash"),
+        Match(wm_class="toolbar"),
+        Match(wm_class="confirmreset"),  # gitk
+        Match(wm_class="makebranch"),  # gitk
+        Match(wm_class="maketag"),  # gitk
+        Match(title="branchdialog"),  # gitk
+        Match(title="pinentry"),  # GPG key password entry
+        Match(wm_class="ssh-askpass"),  # ssh-askpass
+        Match(wm_class="pomotroid"),
+        Match(wm_class="cmatrixterm"),
+        Match(title="Farge"),
+        Match(wm_class="org.gnome.Nautilus"),
+        Match(wm_class="feh"),
+        Match(wm_class="screenkey"),
+        Match(title="screenkey"),
+        Match(wm_class="gnome-calculator"),
+        Match(wm_class="blueberry"),
+        Match(wm_class="protonvpn"),
+    ]
+)
+
+
+@hook.subscribe.startup_once
+def start_once():
+    subprocess.call([home + "/.config/qtile/autostart.sh"])
+
+floating_types = ["notification", "toolbar", "splash", "dialog", "dock"]
+
+@lazy.function
+def float_to_front(qtile):
+    """
+    Bring all floating windows of the group to front
+    """
+    global floating_windows
+    floating_windows = []
+    for window in qtile.currentGroup.windows:
+        if window.floating:
+            window.cmd_bring_to_front()
+            floating_windows.append(window)
+    floating_windows[-1].cmd_focus()
+
+@hook.subscribe.client_killed
+def _unswallow(window):
+    if hasattr(window, "parent"):
+        window.parent.minimized = False
+
+wmname = "LG3D"
