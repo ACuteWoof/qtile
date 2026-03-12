@@ -1,7 +1,7 @@
 #!/bin/sh
 
 dunst &
-# picom &
+picom &
 # flameshot &
 ~/.config/qtile/mail-check.sh &
 # pipewire &
