@@ -309,7 +309,7 @@ def widgets_list(without_systray=False):
         widget.Clock(
             foreground=colors["color1fg"],
             background=colors["color1"],
-            format="%D",
+            format="%d/%m/%y",
         ),
         widget.Sep(padding=6, linewidth=0, background=colors["color3"]),
         widget.TextBox(
