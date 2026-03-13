@@ -1,7 +1,7 @@
 #!/bin/sh
 
 notify-send "Loading zathura..."
-URL=$(echo $(xclip -o))
+URL=$(echo $(xsel -o -b))
 FILE=${URL##*/}
 ROOT="$HOME/Basement/PDF/"
 mkdir -p $ROOT

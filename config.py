@@ -238,6 +238,7 @@ def widgets_list(without_systray=False):
         widget.Spacer(),
 
         ### Systray ###
+        widget.Sep(padding=9, linewidth=0, background=colors["color2"]),
         widget.Systray(background=colors["systray"], padding=10),
         widget.Sep(linewidth=0, padding=6, background=colors["systray"]),
     
